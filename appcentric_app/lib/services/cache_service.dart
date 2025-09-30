@@ -6,21 +6,21 @@ class CacheService {
   static const String _lastViewedKey = 'last_viewed_paper';
 
   static Future<void> init() async {
-    await Hive.openBox<Map>(_papersBox);
+    await Hive.openBox<Map<dynamic, dynamic>>(_papersBox);
   }
 
   static Future<void> cacheLastViewedPaper(Paper paper) async {
-    final box = Hive.box<Map>(_papersBox);
+    final box = Hive.box<Map<dynamic, dynamic>>(_papersBox);
     final paperMap = _paperToMap(paper);
     await box.put(_lastViewedKey, paperMap);
   }
 
   static Future<Paper?> getLastViewedPaper() async {
-    final box = Hive.box<Map>(_papersBox);
+    final box = Hive.box<Map<dynamic, dynamic>>(_papersBox);
     final paperMap = box.get(_lastViewedKey);
     
     if (paperMap != null) {
-      return _paperFromMap(paperMap);
+      return _paperFromMap(paperMap.cast<String, dynamic>());
     }
     return null;
   }

@@ -1,4 +1,7 @@
-﻿class Paper {
+﻿import 'subject.dart';
+import 'question.dart';
+
+class Paper {
   final int id;
   final String title;
   final int year;
@@ -17,37 +20,25 @@
 
   factory Paper.fromJson(Map<String, dynamic> json) {
     return Paper(
-      id: json['id'],
-      title: json['title'],
-      year: json['year'],
-      type: json['type'],
-      subject: Subject.fromJson(json['subject']),
-      questions: (json['questions'] as List)
-          .map((q) => Question.fromJson(q))
+      id: json['id'] as int,
+      title: json['title'] as String,
+      year: json['year'] as int,
+      type: json['type'] as String?,
+      subject: Subject.fromJson(json['subject'] as Map<String, dynamic>),
+      questions: (json['questions'] as List<dynamic>)
+          .map((q) => Question.fromJson(q as Map<String, dynamic>))
           .toList(),
     );
   }
-}
 
-class Subject {
-  final int id;
-  final String name;
-  final String code;
-  final String? description;
-
-  Subject({
-    required this.id,
-    required this.name,
-    required this.code,
-    this.description,
-  });
-
-  factory Subject.fromJson(Map<String, dynamic> json) {
-    return Subject(
-      id: json['id'],
-      name: json['name'],
-      code: json['code'],
-      description: json['description'],
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'year': year,
+      'type': type,
+      'subject': subject.toJson(),
+      'questions': questions.map((q) => q.toJson()).toList(),
+    };
   }
 }

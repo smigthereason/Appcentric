@@ -67,12 +67,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   : ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          final success = await authProvider.login(
+                          // FIXED: Added await for the Future
+                          await authProvider.login(
                             _emailController.text,
                             _passwordController.text,
                           );
                           
-                          if (success && mounted) {
+                          if (mounted) {
                             Navigator.pushReplacementNamed(context, '/papers');
                           }
                         }

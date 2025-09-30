@@ -13,10 +13,19 @@
 
   factory Answer.fromJson(Map<String, dynamic> json) {
     return Answer(
-      id: json['id'],
-      answerText: json['answer_text'],
-      isCorrect: json['is_correct'],
-      explanation: json['explanation'],
+      id: json['id'] as int,
+      answerText: json['answer_text'] as String,
+      isCorrect: json['is_correct'] as bool,
+      explanation: json['explanation'] as String?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'answer_text': answerText,
+      'is_correct': isCorrect,
+      'explanation': explanation,
+    };
   }
 }

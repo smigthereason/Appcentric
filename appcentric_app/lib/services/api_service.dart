@@ -1,5 +1,4 @@
-﻿import 'dart:convert';
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/paper.dart';
 import '../models/subject.dart';
@@ -15,7 +14,7 @@ class ApiService {
       onRequest: (options, handler) async {
         final token = await _storage.read(key: 'auth_token');
         if (token != null) {
-          options.headers['Authorization'] = 'Bearer \';
+          options.headers['Authorization'] = 'Bearer ';
         }
         return handler.next(options);
       },
@@ -30,13 +29,15 @@ class ApiService {
 
   Future<String?> login(String email, String password) async {
     try {
-      final response = await _dio.post('/auth/login', data: {
+      final response = await _dio.post<Map<String, dynamic>>('/auth/login', data: {
         'email': email,
         'password': password,
       });
 
-      final token = response.data['token'];
-      await _storage.write(key: 'auth_token', value: token);
+      final token = response.data?['token'] as String?;
+      if (token != null) {
+        await _storage.write(key: 'auth_token', value: token);
+      }
       return token;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -45,15 +46,16 @@ class ApiService {
 
   Future<List<Paper>> getPapers({String? search, String? subject, int? year}) async {
     try {
-      final Map<String, dynamic> params = {};
+      final Map<String, dynamic> params = <String, dynamic>{};
       if (search != null) params['search'] = search;
       if (subject != null) params['subject'] = subject;
       if (year != null) params['year'] = year;
 
-      final response = await _dio.get('/papers', queryParameters: params);
+      final response = await _dio.get<Map<String, dynamic>>('/papers', queryParameters: params);
       
-      final papers = (response.data['data'] as List)
-          .map((paper) => Paper.fromJson(paper))
+      final data = response.data?['data'] as List<dynamic>? ?? [];
+      final papers = data
+          .map((paper) => Paper.fromJson(paper as Map<String, dynamic>))
           .toList();
       return papers;
     } on DioException catch (e) {
@@ -63,8 +65,8 @@ class ApiService {
 
   Future<Paper> getPaperDetail(int paperId) async {
     try {
-      final response = await _dio.get('/papers/\');
-      return Paper.fromJson(response.data);
+      final response = await _dio.get<Map<String, dynamic>>('/papers/');
+      return Paper.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw _handleError(e);
     }
@@ -72,9 +74,10 @@ class ApiService {
 
   Future<List<Subject>> getSubjects() async {
     try {
-      final response = await _dio.get('/publicum');
-      final subjects = (response.data['data'] as List)
-          .map((subject) => Subject.fromJson(subject))
+      final response = await _dio.get<Map<String, dynamic>>('/publicum');
+      final data = response.data?['data'] as List<dynamic>? ?? [];
+      final subjects = data
+          .map((subject) => Subject.fromJson(subject as Map<String, dynamic>))
           .toList();
       return subjects;
     } on DioException catch (e) {
@@ -84,7 +87,7 @@ class ApiService {
 
   Future<void> logout() async {
     try {
-      await _dio.post('/auth/logout');
+      await _dio.post<dynamic>('/auth/logout');
     } catch (e) {
       // Ignore errors during logout
     } finally {
@@ -100,7 +103,8 @@ class ApiService {
     } else if (e.type == DioExceptionType.connectionError) {
       return 'No internet connection. Please check your network settings.';
     } else if (e.response != null) {
-      return e.response?.data['message'] ?? 'An error occurred';
+      final message = e.response?.data?['message'] as String?;
+      return message ?? 'An error occurred';
     } else {
       return 'An unexpected error occurred';
     }

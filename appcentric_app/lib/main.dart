@@ -33,12 +33,21 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           useMaterial3: true,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         initialRoute: '/login',
         routes: {
           '/login': (context) => const LoginScreen(),
           '/papers': (context) => const PapersListScreen(),
-          '/paper_detail': (context) => const PaperDetailScreen(),
+        },
+        onGenerateRoute: (settings) {
+          if (settings.name == '/paper_detail') {
+            final paperId = settings.arguments as int;
+            return MaterialPageRoute(
+              builder: (context) => PaperDetailScreen(paperId: paperId),
+            );
+          }
+          return null;
         },
       ),
     );
