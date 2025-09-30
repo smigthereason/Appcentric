@@ -75,7 +75,7 @@ class _PapersListScreenState extends State<PapersListScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         paperProvider.error!,
                         style: const TextStyle(color: Colors.red, fontSize: 16),
                         textAlign: TextAlign.center,
@@ -93,11 +93,11 @@ class _PapersListScreenState extends State<PapersListScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.description, size: 64, color: Colors.grey),
+                          const Icon(Icons.description, size: 64, color: Colors.grey),
                           SizedBox(height: 16),
-                          Text(
+                          const Text(
                             'No papers found',
-                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                            style: const TextStyle(fontSize: 18, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -113,24 +113,24 @@ class _PapersListScreenState extends State<PapersListScreen> {
                             elevation: 2,
                             child: ListTile(
                               leading: const Icon(Icons.description, color: Colors.blue),
-                              title: Text(
+                              title: const Text(
                                 paper.title,
                                 style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '${paper.subject.name} • ${paper.year}',
+                                  const Text(
+                                    ' • ',
                                     style: const TextStyle(fontSize: 14),
                                   ),
                                   if (paper.type != null)
-                                    Text(
-                                      'Type: ${paper.type}',
+                                    const Text(
+                                      'Type: ',
                                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                                     ),
-                                  Text(
-                                    'Questions: ${paper.questions.length}',
+                                  const Text(
+                                    'Questions: ',
                                     style: const TextStyle(fontSize: 12, color: Colors.green),
                                   ),
                                 ],

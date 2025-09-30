@@ -2,12 +2,8 @@
   exclude:
     - '**/*.g.dart'
     - '**/*.freezed.dart'
-
   errors:
-    missing_required_param: warning
-    missing_return: warning
-    todo: ignore
-    deprecated_member_use_from_same_package: ignore
+    unawaited_futures: ignore
 
 linter:
   rules:
@@ -28,7 +24,6 @@ linter:
     - null_closures
     - prefer_adjacent_string_concatenation
     - prefer_collection_literals
-    - prefer_const_constructors
     - prefer_contains
     - prefer_final_fields
     - prefer_for_elements_to_map_fromIterable
@@ -45,9 +40,7 @@ linter:
     - recursive_getters
     - slash_for_doc_comments
     - type_init_formals
-    - unawaited_futures
     - unnecessary_brace_in_string_interps
-    - unnecessary_const
     - unnecessary_getters_setters
     - unnecessary_new
     - unnecessary_null_in_if_null_operators

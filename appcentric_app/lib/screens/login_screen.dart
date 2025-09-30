@@ -18,6 +18,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
+    void handleLogin() async {
+      if (_formKey.currentState!.validate()) {
+        final success = await authProvider.login(
+          _emailController.text,
+          _passwordController.text,
+        );
+        
+        if (success && mounted) {
+          Navigator.pushReplacementNamed(context, '/papers');
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
@@ -65,19 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
               authProvider.isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          // FIXED: Added await for the Future
-                          await authProvider.login(
-                            _emailController.text,
-                            _passwordController.text,
-                          );
-                          
-                          if (mounted) {
-                            Navigator.pushReplacementNamed(context, '/papers');
-                          }
-                        }
-                      },
+                      onPressed: handleLogin,
                       child: const Text('Login'),
                     ),
             ],
